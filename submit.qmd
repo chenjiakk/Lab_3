@@ -1,42 +1,17 @@
 ---
 title: "Lab 3"
-author: "Chenjia"
-date: "2023-09-08"
-output: html_document
+author: "Karisa Ke"
+format: html
+editor: visual
+embed-resources: true
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r}
-
-```
-
-```{r cars}
-summary(cars)
-library(data.table)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 ## 1. Read in the data
 
 ```{r}
+install.packages('R.utils')
+library('R.utils')
+
 download.file(
 
     "https://raw.githubusercontent.com/USCbiostats/data-science-data/master/02_met/met_all.gz",
@@ -50,41 +25,52 @@ download.file(
 met <- data.table::fread("met_all.gz")
 ```
 
-## 2.
+## 2. Check the dimensions, headers, footers. How many columns, rows are there?
 
 ```{r}
 dim(met)
+```
+
+There are 2,377,343 rows and 30 columns in the met dataset.
+
+```{r}
 head(met)
+```
+
+```{r}
 tail(met)
 ```
 
-## 3. **Take a look at the variables**
+## 3. Take a look at the variables.
 
 ```{r}
 str(met)
 ```
 
-## 4. **Take a closer look at the key variables**
-
-```{r}
-summary(met[,8:13])
-```
+## 4. Take a closer look at the key variables.
 
 ```{r}
 table(met$year)
+```
 
+```{r}
 table(met$day)
+```
 
+```{r}
 table(met$hour)
 ```
 
 ```{r}
 summary(met$temp)
+```
 
+```{r}
 summary(met$elev)
+```
 
+```{r}
 summary(met$wind.sp)
-
 ```
 
 ```{r}
@@ -98,7 +84,7 @@ met2 <- met[order(temp)]
 head(met2)
 ```
 
-## 5. **Check the data against an external data source.**
+## 5. Check the data against an external data source.
 
 ```{r}
 met <- met[temp>-15]
@@ -106,7 +92,7 @@ met2 <- met[order(temp)]
 head(met2)
 ```
 
-## 6. **Calculate summary statistics**
+## 6. Calculate summary statistics.
 
 ```{r}
 elev <- met[elev==max(elev), ]
@@ -115,29 +101,49 @@ summary(elev)
 
 ```{r}
 cor(elev$temp, elev$wind.sp, use="complete")
+```
+
+```{r}
 cor(elev$temp, elev$hour, use="complete")
+```
+
+```{r}
 cor(elev$wind.sp, elev$day, use="complete")
+```
+
+```{r}
 cor(elev$wind.sp, elev$hour, use="complete")
+```
+
+```{r}
 cor(elev$temp, elev$day, use="complete")
 ```
 
-## 7. **Exploratory graphs**
+## 7. Exploratory graphs
 
 ```{r}
 hist(met$elev, breaks=100)
+```
+
+```{r}
 hist(met$temp)
+```
+
+```{r}
 hist(met$wind.sp)
 ```
 
 ```{r}
+library(dplyr)
+library(leaflet)
 leaflet(elev) %>%
-  addProviderTiles('OpenStreetMap') %>% 
-  addCircles(lat=~lat,lng=~lon, opacity=1, fillOpacity=1, radius=100)
+  addProviderTiles('OpenStreetMap') %>%
+  addCircles(lat=~lat, lng=~lon, opacity=1, fillOpacity=1, radius=100)
 ```
 
 ```{r}
 library(lubridate)
-elev$date <- with(elev, ymd_h(paste(year, month, day, hour, sep= ' ')))
+elev$date <- with(elev, ymd_h(paste(year, month, day, hour, sep=' ')))
 summary(elev$date)
 ```
 
@@ -152,4 +158,17 @@ plot(elev$date, elev$temp, type='l')
 
 ```{r}
 plot(elev$date, elev$wind.sp, type='l')
+```
+
+The temperature changes over days and nights. In the middle August, the wind speed was higher.
+
+## 8. Ask questions
+
+```{r}
+install.packages("corrplot")
+```
+
+```{r}
+temp_wind <- data.frame(elev$temp, elev$wind.sp)
+pairs(temp_wind)
 ```
