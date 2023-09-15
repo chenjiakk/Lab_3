@@ -1,6 +1,6 @@
 ---
 title: "Lab 3"
-author: "Karisa Ke"
+author: "Chenjia Kuang"
 format: html
 editor: visual
 embed-resources: true
@@ -35,9 +35,6 @@ There are 2,377,343 rows and 30 columns in the met dataset.
 
 ```{r}
 head(met)
-```
-
-```{r}
 tail(met)
 ```
 
@@ -67,9 +64,6 @@ summary(met$temp)
 
 ```{r}
 summary(met$elev)
-```
-
-```{r}
 summary(met$wind.sp)
 ```
 
@@ -123,13 +117,7 @@ cor(elev$temp, elev$day, use="complete")
 
 ```{r}
 hist(met$elev, breaks=100)
-```
-
-```{r}
 hist(met$temp)
-```
-
-```{r}
 hist(met$wind.sp)
 ```
 
@@ -154,9 +142,6 @@ head(elev)
 
 ```{r}
 plot(elev$date, elev$temp, type='l')
-```
-
-```{r}
 plot(elev$date, elev$wind.sp, type='l')
 ```
 
